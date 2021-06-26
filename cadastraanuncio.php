@@ -45,7 +45,7 @@
     function VisualizacaoGerada ($compartilhamentos, $visualizacaoGerada){//calculo das vizualizações geradas apartir de um compartilhamento
    
         if($compartilhamentos>=1){ 
-            for ($i=0; $i <= $compartilhamentos; $i++){
+            for ($i=0; $i < $compartilhamentos; $i++){
     
                 $visualizacaoGerada+=40;
     
@@ -57,9 +57,10 @@
     }
 
         function Une(){
-          $comp = Compartilhamentos();
-          VisualizacaoGerada($comp, $visualizacaoGerada);
-             
+        
+          CliquesGerados($cliquesGerados, $visualizacaoGerada);
+          CompartilhamentoGerados($compartilhamentosGerado, $cliquesGerado);
+          VisualizacaoGerada ($compartilhamentos, $visualizacaoGerada);     
         }
 
     
@@ -70,7 +71,9 @@
     Compartilhamento($compartilhamentos, $cliques);
 
     $CompartilhamentoGerados = $Compartilhamento; 
- 
+    $CliquesGerados = $cliques;
+
+    //laço que executa as funções secundarias
     for ($i=0; $i<4; $i++){
         Une();
         
