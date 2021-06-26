@@ -69,7 +69,7 @@
     Cliques($cliques, $visualizacao);
     Compartilhamento($compartilhamentos, $cliques);
 
-    CompartilhamentoGerados = Compartilhamento; 
+    $CompartilhamentoGerados = $Compartilhamento; 
  
     for ($i=0; $i<4; $i++){
         Une();
