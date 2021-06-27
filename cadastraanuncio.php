@@ -1,84 +1,89 @@
 <?php 
 
-    //estima-se que cada pessoa custa R$0.03 e 100 pessoas custam R$3.30;
-    //estima-se que 12% das pessoas clicam nos anuncios;
-    //estima-se que 15% das pessoas compartilham em suas redes sociais;
-   
-    $valorAnuncio = 120; //valor do anuncio
-    $visualizacao = 0; //pessoas que viram o anuncio
-    $visualizacaoGerada=0;//vizualizações geradas apartir de um compartilhamento
-    $compartilhamentos = 0; //compartilhamentos que o anuncio teve
-    $compartilhamentosGerado = 0; //compartilhamentos que o anuncio teve apartir de um compartilhamento
-    $cliques = 0; //cliques que o anuncio teve 
-    $cliquesGerado = 0; //cliques que o anuncio teve apartir de um compartilhamento
+//estima-se que cada pessoa custa R$0.03 e 100 pessoas custam R$3.30;
+//estima-se que 12% das pessoas clicam nos anuncios;
+//estima-se que 15% das pessoas compartilham em suas redes sociais;
 
-    function Visualizacao($visualizacao, $valorAnuncio){//visualizações geradas com base no valor investido
-        $visualizacao = $valorAnuncio/0.03;
+define('CUSTO_VISUALIZACAO_PESSOA', 0.03);
+define('PORCENTAGEM_VISUALIZACOES_CLIQUES', 0.12);
+define('PORCENTAGEM_COMPARTILHAMENTO_SOCIAL', 0.15);
+define('VISUALIZACOES_POR_COMPARTILHAMENTO', 40);
 
-        return $visualizacao;
-    }
+$valorAnuncio = readline("Digite o valor do investimento: ");
 
-    function Cliques($cliques, $visualizacao){//calculo dos cliques primarios
-        $cliques = $visualizacao * (12 / 100); 
+//pessoas que viram o anuncio
+$postVisualizacao = 0; 
 
-        return $cliques;
-    }
+//vizualizações geradas apartir de um compartilhamento
+$postVisualizacaoGerada=0;
 
-    function Compartilhamento($compartilhamentos, $cliques){//calculo dos compartilhamentos primarios
-        $compartilhamentos = $cliques * (15/100); 
+//compartilhamentos que o anuncio teve
+$postCompartilhamentos = 0; 
 
-        return $compartilhamentos;
-    }
+//compartilhamentos que o anuncio teve apartir de um compartilhamento
+$postCompartilhamentosGerado = 0;
 
-    function CliquesGerados($cliquesGerados, $visualizacaoGerada){//calculo dos cliques gerados apartir de um compartilhamento
-        $cliquesGerados = $visualizacaoGerados * (12 / 100); 
-        
-        return  $cliquesGerados;
-    }
+//cliques que o anuncio teve
+$postCliques = 0; 
 
-    function CompartilhamentoGerados($compartilhamentosGerado, $cliquesGerado){//calculo dos compartilhamentos apartir de compartilhamento primario
-        $compartilhamentosGerado = $cliquesGerado * (15/100); 
+//cliques que o anuncio teve apartir de um compartilhamento
+$postCliquesGerado = 0; 
 
-        return $compartilhamentosGerados;
-    }
+//visualizações geradas com base no valor investido
+function Visualizacao($valorAnuncio)
+{
+    $visualizacao = $valorAnuncio / CUSTO_VISUALIZACAO_PESSOA;
 
-    function VisualizacaoGerada ($compartilhamentos, $visualizacaoGerada){//calculo das vizualizações geradas apartir de um compartilhamento
-   
-        if($compartilhamentos>=1){ 
-            for ($i=0; $i < $compartilhamentos; $i++){
-    
-                $visualizacaoGerada+=40;
-    
-            }
-        }
+    return $visualizacao;
+}
 
-        return $visualizacaoGerada;
+//calculo dos cliques primarios
+function Cliques($visualizacao)
+{
+    $cliques = $visualizacao * PORCENTAGEM_VISUALIZACOES_CLIQUES;
 
-    }
+    return $cliques;
+}
 
-        function Une(){
-        
-          CliquesGerados($cliquesGerados, $visualizacaoGerada);
-          CompartilhamentoGerados($compartilhamentosGerado, $cliquesGerado);
-          VisualizacaoGerada ($compartilhamentos, $visualizacaoGerada);     
-        }
+//calculo dos compartilhamentos primarios
+function Compartilhamento($cliques)
+{
+    $compartilhamentos = $cliques * PORCENTAGEM_COMPARTILHAMENTO_SOCIAL;
 
-    
-    //chamada das funções primarias
-    
-    Visualizacao($visualizacao, $valorAnuncio);
-    Cliques($cliques, $visualizacao);
-    Compartilhamento($compartilhamentos, $cliques);
+    return $compartilhamentos;
+}
 
-    $CompartilhamentoGerados = $Compartilhamento; 
-    $CliquesGerados = $cliques;
+//calculo das vizualizações geradas apartir de um compartilhamento
+function VisualizacaoGerada($compartilhamentos)
+{
 
-    //laço que executa as funções secundarias
-    for ($i=0; $i<4; $i++){
-        Une();
-        
-    }
+    return $compartilhamentos * VISUALIZACOES_POR_COMPARTILHAMENTO;
+}
 
+
+//chamada das funções primarias
+
+$postVisualizacao = Visualizacao($valorAnuncio);
+$postCliques = Cliques($postVisualizacao);
+$postCompartilhamentos = Compartilhamento($postCliques);
+
+
+//todo calculo dos compartilhamentos aqui
+
+$postCompartilhamentosGerado += $postCompartilhamentos;
+
+
+for ($i=0; $i<4; $i++)
+{
+    $postVisualizacaoGerada =  VisualizacaoGerada($postCompartilhamentosGerado);
+    $postCliquesGerado = Cliques($postVisualizacaoGerada);
+    $postCompartilhamentosGerado = Compartilhamento($postCliquesGerado);
+    $postVisualizacao += $postVisualizacaoGerada;
+}
+
+$totalVisualizacoes = $postVisualizacao;
+
+echo 'Projeção visualizações: '.$totalVisualizacoes.PHP_EOL;
 
     
 
